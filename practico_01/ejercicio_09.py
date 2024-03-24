@@ -1,11 +1,14 @@
 """FOR, Sum, Reduce."""
+"""Devuelve la suma de los números de 1 a N.
 
+Restricción: Utilizar un bucle for.
+"""
 
 def sumatoria_basico(n: int) -> int:
-    """Devuelve la suma de los números de 1 a N.
-
-    Restricción: Utilizar un bucle for.
-    """
+    suma = 0
+    for i in range(n+1):
+        suma+=i
+    return suma
     pass # Completar
 
 
@@ -16,12 +19,13 @@ assert sumatoria_basico(100) == 5050
 
 
 ###############################################################################
-
+"""Re-Escribir utilizando la función sum y sin usar bucles.
+Referencia: https://docs.python.org/3/library/functions.html#sum
+"""
 
 def sumatoria_sum(n: int) -> int:
-    """Re-Escribir utilizando la función sum y sin usar bucles.
-    Referencia: https://docs.python.org/3/library/functions.html#sum
-    """
+    suma = sum(range(0, n))
+
     pass # Completar
 
 
@@ -36,11 +40,15 @@ assert sumatoria_sum(100) == 5050
 
 from functools import reduce
 
+"""CHALLENGE OPCIONAL: Re-escribir utilizando reduce.
+Referencia: https://docs.python.org/3/library/functools.html#functools.reduce
+"""
 
 def sumatoria_reduce(n: int) -> int:
-    """CHALLENGE OPCIONAL: Re-escribir utilizando reduce.
-    Referencia: https://docs.python.org/3/library/functools.html#functools.reduce
-    """
+    suma = reduce(lambda x, y: x + y, range(0,n))
+    return suma
+
+
     pass # Completar
 
 

@@ -12,13 +12,16 @@ from typing import Any, List, Tuple
 nombre_articulos = ["ventana", "lámpara", "shampoo"]
 precio_articulos = [100.48, 16.42, 5.20]
 
+"""Toma dos listas y devuelve una tupla de duplas con los componentes de
+las listas.
 
+Restricción: Resolver utilizando un bucle for.
+"""
 def combinar_basico(nombres: List[str], precios: List[float]) -> Tuple[Any]:
-    """Toma dos listas y devuelve una tupla de duplas con los componentes de
-    las listas.
-
-    Restricción: Resolver utilizando un bucle for.
-    """
+    combinados = ()
+    for nombre, precio in zip(nombres, precios):
+        combinados += ((nombre, precio),)
+    return combinados
     pass # Completar
 
 
@@ -38,11 +41,14 @@ assert combinar_basico(nombre_articulos, precio_articulos) == respuesta
 
 id_articulos = [6852, 1459, 3578]
 
-
+"""Re-Escribir utilizando enumerate y agregando un nuevo componente.
+Referencia: https://docs.python.org/3/library/functions.html#enumerate
+"""
 def combinar_enumerate(nombres: List[str], precios: List[float], ids: List[int]) -> Tuple[Any]:
-    """Re-Escribir utilizando enumerate y agregando un nuevo componente.
-    Referencia: https://docs.python.org/3/library/functions.html#enumerate
-    """
+    combinados = ()
+    for i, (nombre, precio, id_articulo) in enumerate(zip(nombres, precios, ids)):
+        combinados += ((nombre, precio, id_articulo),)
+    return combinados
     pass # Completar
 
 
@@ -62,11 +68,17 @@ assert combinar_enumerate(nombre_articulos, precio_articulos, id_articulos) == r
 
 id_articulos = [6852, 1459, 3578]
 
-
+"""Re-Escribir utilizando zip.
+Referencia: https://docs.python.org/3/library/functions.html#zip
+"""
 def combinar_zip(nombres: List[str], precios: List[float], ids: List[int]) -> Tuple[Any]:
-    """Re-Escribir utilizando zip.
-    Referencia: https://docs.python.org/3/library/functions.html#zip
-    """
+    combinados = ()
+    for nombre, precio, id in zip(nombres, precios, ids):
+        combinados += ((nombre, precio, id),)
+    return combinados
+    pass # Completar
+
+
     pass # Completar
 
 
@@ -88,11 +100,17 @@ id_articulos = [6852, 1459, 3578]
 categoria_articulos = ["hogar", "libreria", "perfumeria"]
 importado_articulos = [True, False, True]
 
-
+"""Re-Escribir utilizando zip y una cantidad arbitraria de componentes.
+Referencia: https://docs.python.org/3/tutorial/controlflow.html#unpacking-argument-lists
+"""
 def combinar_zip_args(*args) -> Tuple[Any]:
-    """Re-Escribir utilizando zip y una cantidad arbitraria de componentes.
-    Referencia: https://docs.python.org/3/tutorial/controlflow.html#unpacking-argument-lists
-    """
+    combinados = ()
+    for i in zip(*args):
+        combinados += ((i),)
+    return combinados
+    pass # Completar
+
+
     pass # Completar
 
 

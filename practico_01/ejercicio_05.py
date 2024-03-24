@@ -2,13 +2,19 @@
 
 from typing import Iterable
 
+"""Toma un lista de números y devuelve el producto todos los númreos. Si
+   la lista está vacia debe devolver 0.
 
+   Restricciones: No usar bibliotecas auxiliares (Numpy, math, pandas).
+   """
 def multiplicar_basico(numeros: Iterable[float]) -> float:
-    """Toma un lista de números y devuelve el producto todos los númreos. Si
-    la lista está vacia debe devolver 0.
-
-    Restricciones: No usar bibliotecas auxiliares (Numpy, math, pandas).
-    """
+    if len(numeros) == 0:
+        return 0
+    else:
+        nro = 1
+        for numero in numeros:
+            nro *= numero
+        return nro
     pass # Completar
 
 
@@ -26,11 +32,16 @@ assert multiplicar_basico(range(1, 20)) == 121_645_100_408_832_000
 
 from functools import reduce
 
+"""CHALLENGE OPCIONAL - Re-escribir utilizando reduce.
+Referencia: https://docs.python.org/3.8/library/functools.html#functools.reduce
+"""
 
 def multiplicar_reduce(numeros: Iterable[float]) -> float:
-    """CHALLENGE OPCIONAL - Re-escribir utilizando reduce.
-    Referencia: https://docs.python.org/3.8/library/functools.html#functools.reduce
-    """
+    if len(numeros) != 0:
+        nro: float = reduce(lambda x, y: x * y, numeros)
+        return nro
+    else:
+        return 0
     pass # Completar
 
 
