@@ -1,6 +1,5 @@
 """Herencia"""
 
-
 # NO MODIFICAR - INICIO
 class Animal:
     def __init__(self, edad: int = 0):
@@ -18,7 +17,11 @@ class Perro(Animal):
     "Soy un perro y" + método descripción del padre
     """
     # Completar
-
+    def __init__(self, edad: int = 0, raza: str = ""):
+        self.edad = edad   ## Otra opción: Animal.__init__(self, edad)
+        self.raza = raza
+    def descripcion(self) -> str:
+        return f"Soy un perro y {super().descripcion().lower()}"
 
 # NO MODIFICAR - INICIO
 terrier = Perro(edad=8, raza="Yorkshire Terrier")
@@ -36,16 +39,21 @@ assert cachorro.descripcion() == "Soy un perro y tengo 1 años"
 
 from dataclasses import dataclass
 
-
 @dataclass
 class Animal:
     pass # Completar
+    edad: int = 0
+    def descripcion(self) -> str:
+        return f"Tengo {self.edad} años"
 
 
 @dataclass
 class Perro(Animal):
     pass # Completar
+    raza: str = ""
 
+    def descripcion(self) -> str:
+        return f"Soy un perro y {super().descripcion().lower()}"
 
 # NO MODIFICAR - INICIO
 terrier = Perro(edad=8, raza="Yorkshire Terrier")

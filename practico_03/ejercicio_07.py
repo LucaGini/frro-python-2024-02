@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from typing import List
 
-
 # NO MODIFICAR - INICIO
 @dataclass
 class Articulo:
@@ -25,6 +24,11 @@ def actualizar_precio(articulos: List[Articulo], porcentaje: float) -> List[Arti
     """
     
     # Completar
+    nuevos = []
+    for articulo in deepcopy(articulos):
+        articulo.precio *= 1 + porcentaje / 100
+        nuevos.append(articulo)
+    return nuevos
 
 
 # NO MODIFICAR - INICIO

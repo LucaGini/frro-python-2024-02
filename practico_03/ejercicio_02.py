@@ -1,6 +1,5 @@
 """Variables y Métodos de Clase"""
 
-
 class Articulo:
     """Clase con "nombre" como variable de instancia y un id incremental
     generado automáticamente.
@@ -11,6 +10,14 @@ class Articulo:
     """
 
     # Completar
+    _last_id: int = 0
+    def __init__(self, nombre: str = "") -> None:
+        self.nombre: str = nombre
+        self.id_: int = self._get_next_id()
+    @classmethod
+    def _get_next_id(cls) -> int:
+        cls._last_id += 1
+        return cls._last_id
 
 
 # NO MODIFICAR - INICIO
