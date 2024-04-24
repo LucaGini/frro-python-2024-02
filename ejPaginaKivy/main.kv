@@ -1,0 +1,80 @@
+ScreenManager:
+    user_progress:0
+    password_progress:0
+
+
+
+    Screen:
+        name:"Pantalla 1"
+        BoxLayout:
+            orientation:'vertical'
+            canvas:
+                Color:
+                    rgb:[4,0,0]
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+
+
+            Label:
+                text:'Login'
+            GridLayout:
+                rows:3
+                cols:3
+                padding:5
+                spacing:5
+
+                TextInput:
+                    id: user
+                    multiline: False
+                    readonly: False
+                    font_size: 15
+                    on_text:
+                        if len(user.text) != 0: root.user_progress = 50
+                        else: root.user_progress = 0
+                TextInput:
+                    id:password
+                    multiline: False
+                    readonly: False
+                    font_size: 15
+                    on_text:
+                        if len(password.text) != 0: root.password_progress = 50
+                        else: root.password_progress = 0
+            ProgressBar:
+                value:root.user_progress+root.password_progress
+                id:progress
+                max:100
+                size_hint_y: 5
+                height: 32
+
+                Button:
+                    disabled: True if not(root.user_progress + root.password_progress == 100) else False
+                    text:'Ingresar'
+                    on_press:
+                        root.transition.direction='right'
+                        root.current="Pantalla 2"
+                        user.text=""
+                        password.text=""
+                    size_hint: (0.3,0.1)
+                    pos_hint:{'center_x':0.5,'center_y':0.5}
+
+
+    Screen:
+        name:"Pantalla 2"
+        BoxLayout:
+            orientation:'vertical'
+            canvas:
+                Color:
+                    rgb:[0,0.5,0]
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+            Label:
+                text:'Bienvenido'
+            Button:
+                text:'Salir'
+                on_press:
+                    root.transition.direction='left'
+                    root.current="Pantalla 1"
+                size_hint: (0.3,0.1)
+                pos_hint:{'center_x':0.5,'center_y':0.5}
