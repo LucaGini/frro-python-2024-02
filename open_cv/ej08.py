@@ -2,7 +2,7 @@ import time
 import numpy as np
 import cv2
 
-camara = cv2.VideoCapture("Y2meta.app - 4K Road traffic video for object detection and tracking - free download now!.mp4")
+camara = cv2.VideoCapture(".mp4") #Hay que descargar un video. No puedo subirlo a git por tamaño excesivo
 
 #Inicializamos el primer frame no vacio. Nos servirá para obtener el fondo
 fondo = None
