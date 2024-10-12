@@ -29,77 +29,87 @@ class NegocioSocio(object):
         """
         Devuelve la instancia del socio, dado su id.
         Devuelve None si no encuentra nada.
-        :rtype: Socio
         """
-        return
+        return self.datos.buscar(id_socio)
 
     def buscar_dni(self, dni_socio):
         """
         Devuelve la instancia del socio, dado su dni.
         Devuelve None si no encuentra nada.
-        :rtype: Socio
         """
-        return
+        return self.datos.buscar_dni(dni_socio)
 
     def todos(self):
         """
         Devuelve listado de todos los socios.
-        :rtype: list
         """
-        return []
+        return self.datos.todos()
 
     def alta(self, socio):
         """
         Da de alta un socio.
         Se deben validar las 3 reglas de negocio primero.
         Si no validan, levantar la excepcion correspondiente.
-        Devuelve True si el alta fue exitoso.
-        :type socio: Socio
-        :rtype: bool
         """
-        return False
+        # Regla 1: DNI único
+        if not self.regla_1(socio):
+            raise DniRepetido("El DNI ya está registrado.")
+
+        # Regla 2: Longitud del nombre y apellido
+        if not self.regla_2(socio):
+            raise LongitudInvalida("El nombre o apellido tiene una longitud inválida.")
+
+        # Regla 3: No superar la cantidad máxima de socios
+        if not self.regla_3():
+            raise MaximoAlcanzado("Se ha alcanzado el número máximo de socios.")
+
+        # Si pasa todas las validaciones, se da de alta el socio
+        return self.datos.alta(socio)
 
     def baja(self, id_socio):
         """
         Borra el socio especificado por el id.
         Devuelve True si el borrado fue exitoso.
-        :rtype: bool
         """
+        socio = self.buscar(id_socio)
+        if socio:
+            return self.datos.baja(id_socio)
         return False
 
     def modificacion(self, socio):
         """
         Modifica un socio.
         Se debe validar la regla 2 primero.
-        Si no valida, levantar la excepcion correspondiente.
-        Devuelve True si la modificacion fue exitosa.
-        :type socio: Socio
-        :rtype: bool
         """
-        return False
+        if not self.regla_2(socio):
+            raise LongitudInvalida()
+
+        return self.datos.modificacion(socio)
 
     def regla_1(self, socio):
         """
-        Validar que el DNI del socio es unico (que ya no este usado).
-        :type socio: Socio
-        :raise: DniRepetido
-        :return: bool
+        Validar que el DNI del socio es único.
         """
-        return False
+        socio_existente = self.buscar_dni(socio.dni)
+        if socio_existente and socio_existente.id_socio != socio.id_socio:
+            return False
+        return True
 
     def regla_2(self, socio):
         """
-        Validar que el nombre y el apellido del socio cuenten con mas de 3 caracteres pero menos de 15.
-        :type socio: Socio
-        :raise: LongitudInvalida
-        :return: bool
+        Validar que el nombre y el apellido tengan más de 3 caracteres y menos de 15.
         """
-        return False
+        if not (self.MIN_CARACTERES <= len(socio.nombre) <= self.MAX_CARACTERES):
+            return False
+        if not (self.MIN_CARACTERES <= len(socio.apellido) <= self.MAX_CARACTERES):
+            return False
+        return True
 
     def regla_3(self):
         """
-        Validar que no se esta excediendo la cantidad maxima de socios.
-        :raise: MaximoAlcanzado
-        :return: bool
+        Validar que no se esté excediendo la cantidad máxima de socios.
         """
-        return False
+        if len(self.todos()) >= self.MAX_SOCIOS:
+            return False
+        return True
+
