@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Gestión de Socios</h2>
+
+<!-- Botón para dar de alta un nuevo socio -->
+<a href="{{ url_for('alta') }}" style="display:inline-block; margin-bottom: 10px;">Alta de Socio</a>
+
+<!-- Tabla para mostrar los socios con las acciones Baja y Modificar -->
+<table border="1" cellpadding="10" cellspacing="0" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>DNI</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for socio in socios %}
+        <tr>
+            <td>{{ socio.id }}</td>
+            <td>{{ socio.nombre }}</td>
+            <td>{{ socio.dni }}</td>
+            <td>
+                <!-- Botón para modificar el socio -->
+                <a href="{{ url_for('modificar', id=socio.id) }}">Modificar</a>
+                
+                <!-- Formulario para dar de baja el socio con un botón -->
+                <form action="{{ url_for('baja', id=socio.id) }}" method="POST" style="display:inline;">
+                    <button type="submit">Baja</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
