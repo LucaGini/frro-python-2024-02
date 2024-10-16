@@ -1,74 +1,77 @@
+from flask import Flask, render_template, request, redirect, url_for, flash
 import sys
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash
 
-# Agregar la ruta de practico_06 al sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'practico_06')))
+# Añadimos la ruta base del proyecto
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from capa_negocio import NegocioSocio, DniRepetido, LongitudInvalida, MaximoAlcanzado
+# Ahora importamos los módulos
+from practico_06.capa_negocio import NegocioSocio, DniRepetido, LongitudInvalida, MaximoAlcanzado
 from practico_05.ejercicio_01 import Socio
 
-app = Flask(__name__)
-app.secret_key = 'mi_clave_secreta'
 
-# Crear una instancia de NegocioSocio
-negocio = NegocioSocio()
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Para habilitar los mensajes flash
+
+# Inicializamos la capa de negocio
+negocio_socio = NegocioSocio()
 
 @app.route('/')
 def index():
-    # Obtener todos los socios
-    socios = negocio.todos()
+    socios = negocio_socio.todos()  # Obtener la lista de todos los socios
     return render_template('socios.html', socios=socios)
 
-# Ruta para Alta de Socios
 @app.route('/alta', methods=['GET', 'POST'])
 def alta():
     if request.method == 'POST':
         nombre = request.form['nombre']
         apellido = request.form['apellido']
         dni = request.form['dni']
-        
-        socio = Socio(nombre=nombre, apellido=apellido, dni=dni)
-        
-        try:
-            negocio.alta(socio)
-            flash('Socio dado de alta con éxito', 'success')
-            return redirect(url_for('index'))
-        except DniRepetido:
-            flash('Error: El DNI ya está registrado', 'danger')
-        except LongitudInvalida:
-            flash('Error: El nombre o apellido tiene una longitud inválida', 'danger')
-        except MaximoAlcanzado:
-            flash('Error: Se ha alcanzado el número máximo de socios', 'danger')
-    
-    return render_template('alta.html')
 
-# Ruta para Baja de Socios
-@app.route('/baja/<int:id>', methods=['POST'])
+        # Crear una instancia de socio
+        nuevo_socio = Socio(dni=dni, nombre=nombre, apellido=apellido)
+
+        try:
+            negocio_socio.alta(nuevo_socio)
+            flash('Socio agregado exitosamente!', 'success')
+            return redirect(url_for('index'))
+        except (DniRepetido, LongitudInvalida, MaximoAlcanzado) as e:
+            flash(str(e), 'danger')
+
+    return render_template('formulario.html', accion="Alta", socio=None)
+
+@app.route('/baja/<int:id>')
 def baja(id):
-    if negocio.baja(id):
-        flash('Socio dado de baja con éxito', 'success')
+    if negocio_socio.baja(id):
+        flash('Socio eliminado exitosamente!', 'success')
     else:
-        flash('Error: No se pudo dar de baja al socio', 'danger')
+        flash('No se encontró el socio a eliminar.', 'danger')
     return redirect(url_for('index'))
 
-# Ruta para Modificar Socios
 @app.route('/modificar/<int:id>', methods=['GET', 'POST'])
 def modificar(id):
-    socio = negocio.buscar(id)
+    socio = negocio_socio.buscar(id)
+    if not socio:
+        flash('Socio no encontrado.', 'danger')
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
-        socio.nombre = request.form['nombre']
-        socio.apellido = request.form['apellido']
-        socio.dni = request.form['dni']
-        
+        nombre = request.form['nombre']
+        apellido = request.form['apellido']
+        dni = request.form['dni']
+
+        socio.nombre = nombre
+        socio.apellido = apellido
+        socio.dni = dni
+
         try:
-            negocio.modificacion(socio)
-            flash('Socio modificado con éxito', 'success')
+            negocio_socio.modificacion(socio)
+            flash('Socio modificado exitosamente!', 'success')
             return redirect(url_for('index'))
-        except LongitudInvalida:
-            flash('Error: El nombre o apellido tiene una longitud inválida', 'danger')
-    
-    return render_template('modificar.html', socio=socio)
+        except LongitudInvalida as e:
+            flash(str(e), 'danger')
+
+    return render_template('formulario.html', accion="Modificar", socio=socio)
 
 if __name__ == '__main__':
     app.run(debug=True)

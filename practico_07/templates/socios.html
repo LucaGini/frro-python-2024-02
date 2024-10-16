@@ -1,35 +1,47 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %}Listado de Socios{% endblock %}
 
 {% block content %}
-<h2>Gestión de Socios</h2>
+<h1>Listado de Socios</h1>
 
-<!-- Botón para dar de alta un nuevo socio -->
-<a href="{{ url_for('alta') }}" style="display:inline-block; margin-bottom: 10px;">Alta de Socio</a>
+<!-- Mostrar mensajes flash -->
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
 
-<!-- Tabla para mostrar los socios con las acciones Baja y Modificar -->
-<table border="1" cellpadding="10" cellspacing="0" style="width: 100%;">
+<!-- Botón Alta -->
+<a href="{{ url_for('alta') }}" class="btn" style="margin-bottom: 5px; display: inline-block;">Alta</a>
+
+<!-- Tabla de Socios -->
+<table style="width: 100%; margin-top: 20px;">
     <thead>
         <tr>
             <th>ID</th>
-            <th>Nombre</th>
             <th>DNI</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
             <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
         {% for socio in socios %}
         <tr>
-            <td>{{ socio.id }}</td>
-            <td>{{ socio.nombre }}</td>
+            <td>{{ socio.id_socio }}</td>
             <td>{{ socio.dni }}</td>
+            <td>{{ socio.nombre }}</td>
+            <td>{{ socio.apellido }}</td>
             <td>
-                <!-- Botón para modificar el socio -->
-                <a href="{{ url_for('modificar', id=socio.id) }}">Modificar</a>
-                
-                <!-- Formulario para dar de baja el socio con un botón -->
-                <form action="{{ url_for('baja', id=socio.id) }}" method="POST" style="display:inline;">
-                    <button type="submit">Baja</button>
-                </form>
+                <!-- Botón Modificar -->
+                <a href="{{ url_for('modificar', id=socio.id_socio) }}" class="btn">Modificar</a>
+                <!-- Botón Baja -->
+                <a href="{{ url_for('baja', id=socio.id_socio) }}" class="btn" onclick="return confirm('¿Estás seguro de que deseas eliminar este socio?')">Baja</a>
             </td>
         </tr>
         {% endfor %}

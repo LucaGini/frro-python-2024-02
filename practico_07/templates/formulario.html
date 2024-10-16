@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Formulario de Socio{% endblock %}
+
+{% block content %}
+<h1>{{ accion }} Socio</h1>
+
+<!-- Mostrar mensajes flash -->
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<form method="POST">
+    <label for="dni">DNI:</label>
+    <input type="text" name="dni" id="dni" value="{{ socio.dni if socio else '' }}" required>
+    
+    <label for="nombre">Nombre:</label>
+    <input type="text" name="nombre" id="nombre" value="{{ socio.nombre if socio else '' }}" required>
+
+    <label for="apellido">Apellido:</label>
+    <input type="text" name="apellido" id="apellido" value="{{ socio.apellido if socio else '' }}" required>
+
+    <button type="submit" class="btn">{{ accion }}</button>
+    <a href="{{ url_for('index') }}" class="btn">Cancelar</a>
+</form>
+{% endblock %}

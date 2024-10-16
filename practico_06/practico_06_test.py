@@ -1,11 +1,12 @@
-# Implementar los casos de prueba descriptos.
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import unittest
-
 from practico_05.ejercicio_01 import Socio
 from practico_06.capa_negocio import NegocioSocio, LongitudInvalida
 
-
+# Implementar los casos de prueba descriptos.
 class TestsNegocio(unittest.TestCase):
 
     def setUp(self):

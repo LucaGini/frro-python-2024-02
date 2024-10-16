@@ -1,7 +1,10 @@
-# Implementar los metodos de la capa de negocio de socios.
-
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from practico_05.ejercicio_01 import Socio
 from practico_05.ejercicio_02 import DatosSocio
+
+# Implementar los metodos de la capa de negocio de socios.
 
 
 class DniRepetido(Exception):

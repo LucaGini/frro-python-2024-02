@@ -2,7 +2,7 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from ejercicio_01 import Base, Socio
+from practico_05.ejercicio_01 import Base, Socio
 
 from typing import List, Optional
 
@@ -91,14 +91,14 @@ datos = DatosSocio()
 
 # Test Alta
 socio = datos.alta(Socio(dni=12345678, nombre='Juan', apellido='Perez'))
-assert socio.id > 0
+assert socio.id_socio > 0
 
 # Test Baja
-assert datos.baja(socio.id) == True
+assert datos.baja(socio.id_socio) == True
 
 # Test Consulta
 socio_2 = datos.alta(Socio(dni=12345679, nombre='Carlos', apellido='Perez'))
-assert datos.buscar(socio_2.id) == socio_2
+assert datos.buscar(socio_2.id_socio) == socio_2
 
 # Test Buscar DNI
 socio_2 = datos.alta(Socio(dni=12345670, nombre='Carlos', apellido='Perez'))
@@ -110,8 +110,8 @@ socio_3.nombre = 'Moria'
 socio_3.apellido = 'Casan'
 socio_3.dni = 13264587
 datos.modificacion(socio_3)
-socio_3_modificado = datos.buscar(socio_3.id)
-assert socio_3_modificado.id == socio_3.id
+socio_3_modificado = datos.buscar(socio_3.id_socio)
+assert socio_3_modificado.id_socio == socio_3.id_socio
 assert socio_3_modificado.nombre == 'Moria'
 assert socio_3_modificado.apellido == 'Casan'
 assert socio_3_modificado.dni == 13264587
