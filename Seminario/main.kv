@@ -1,0 +1,223 @@
+#:kivy 2.1.0
+#:import random random
+#:import Clock kivy.clock.Clock
+#:import Animation kivy.animation.Animation
+#:import SoundLoader kivy.core.audio.SoundLoader
+#:import Popup kivy.uix.popup.Popup
+#:import Label kivy.uix.label.Label
+
+<MainScreenManager>:
+    Screen:
+        name: "main_screen"
+        BoxLayout:
+            orientation: 'vertical'
+            padding: 20
+            spacing: 20
+
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+                text: 'Welcome to Kivy!'
+                font_size: 40
+                bold: True
+                color: 0.1, 0.6, 0.4, 1
+                size_hint_y: None
+                height: self.texture_size[1]
+                canvas.before:
+                    Color:
+                        rgba: 0.9, 0.9, 0.9, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+            GridLayout:
+                cols: 2
+                row_force_default: True
+                row_default_height: 100
+                spacing: 10
+
+                Button:
+                    text: 'Change Color'
+                    font_size: 24
+                    background_color: 1, 0, 0, 1
+                    on_press: 
+                        colored_label.color = (1, 0.5, 0, 1)
+                        sound = SoundLoader.load('sounds\\select_click.wav')
+                        if sound: sound.play()
+
+                Button:
+                    text: 'Reset Color'
+                    font_size: 24
+                    background_color: 0.6, 0.6, 0.6, 1
+                    on_press: 
+                        colored_label.color = (0.1, 0.6, 0.4, 1)
+                        sound = SoundLoader.load('sounds\\reset_click.wav')
+                        if sound: sound.play()
+
+                Button:
+                    text: 'Show Message'
+                    font_size: 24
+                    on_press: 
+                        message_label.text = 'You pressed Show Message!'
+                        sound = SoundLoader.load('sounds\\message_click.wav')
+                        if sound: sound.play()
+
+                Button:
+                    text: 'Clear Message'
+                    font_size: 24
+                    on_press: message_label.text = ''
+
+                Button:
+                    text: 'Animate Text'
+                    font_size: 24
+                    background_color: 0.3, 0.3, 0.7, 1
+                    on_press: 
+                        anim = Animation(center_x=root.width * 0.7, duration=2) + Animation(center_x=root.width * 0.3, duration=2)
+                        anim += Animation(font_size=40, duration=1) + Animation(font_size=30, duration=1)
+                        anim.repeat = True
+                        anim.start(colored_label)
+
+                Button:
+                    text: 'Change Theme'
+                    font_size: 24
+                    background_color: 0.2, 0.5, 0.2, 1
+                    on_press: 
+                        new_color = [random.random() for _ in range(3)] + [1]
+                        self.parent.parent.canvas.before.children[0].rgba = new_color
+                        sound = SoundLoader.load('sounds\\change_theme.wav')
+                        if sound: sound.play()
+
+                Button:
+                    text: 'Reset Effects'
+                    font_size: 24
+                    background_color: 0.8, 0.3, 0.3, 1
+                    on_press: 
+                        colored_label.center_x = root.width / 2
+                        colored_label.font_size = 30
+                        colored_label.color = (0.1, 0.6, 0.4, 1)
+                        self.parent.parent.canvas.before.children[0].rgba = (1, 1, 1, 1)
+                        Animation.cancel_all(colored_label)  # Desactiva la animación
+
+            Label:
+                id: message_label
+                text: ''
+                font_size: 30
+                color: 0.2, 0.2, 0.8, 1
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            ProgressBar:
+                id: progress_bar
+                max: 100
+                value: 0
+                size_hint_y: None
+                height: 20
+
+            Label:
+                id: colored_label
+                text: 'This text changes color'
+                font_size: 30
+                color: 0.1, 0.6, 0.4, 1
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            Button:
+                text: 'Start Progress'
+                font_size: 24
+                size_hint_y: None
+                height: 50
+                on_press: 
+                    Clock.schedule_interval(lambda dt: setattr(progress_bar, 'value', progress_bar.value + 1) if progress_bar.value < 100 else Clock.unschedule(self._clock_event), 0.05)
+
+            Button:
+                text: 'Go to Login'
+                font_size: 24
+                size_hint_y: None
+                height: 50
+                on_press: 
+                    root.transition.direction = 'left'
+                    root.current = 'login_screen'
+
+            Button:
+                text: 'Show Popup'
+                font_size: 24
+                size_hint_y: None
+                height: 50
+                on_press: 
+                    popup = Popup(title='Information', content=Label(text='This is a popup message!'), size_hint=(0.6, 0.3))
+                    popup.open()
+
+    Screen:
+        name: "login_screen"
+        BoxLayout:
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgb: 0, 0.5, 0  # Verde
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Label:
+                text: 'Login'
+            GridLayout:
+                rows: 2
+                cols: 2
+                padding: 5
+                spacing: 5
+                Label:
+                    text: 'Username:'
+                TextInput:
+                    id: user
+                    multiline: False
+                    on_text: 
+                        root.user_progress = 50 if self.text else 0
+                Label:
+                    text: 'Password:'
+                TextInput:
+                    id: password
+                    multiline: False
+                    password: True
+                    on_text: 
+                        root.password_progress = 50 if self.text else 0
+            ProgressBar:
+                value: root.user_progress + root.password_progress
+                max: 100
+                size_hint_y: None
+                height: 20
+            Button:
+                text: 'Ingresar'
+                disabled: root.user_progress + root.password_progress < 100
+                on_press:
+                    root.transition.direction = 'right'
+                    root.current = "welcome_screen"
+                    user.text = ""
+                    password.text = ""
+                    sound = SoundLoader.load('sounds\\login_success.wav')
+                    if sound: sound.play()
+                size_hint: 0.3, 0.1
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+    Screen:
+        name: "welcome_screen"
+        BoxLayout:
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgb: 0, 0.5, 0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Label:
+                text: 'Bienvenido'
+            Button:
+                text: 'Salir'
+                on_press:
+                    root.transition.direction = 'left'
+                    root.current = "main_screen"
+                size_hint: 0.3, 0.1
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
